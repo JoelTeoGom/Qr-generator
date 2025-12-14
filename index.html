@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Code Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="background"></div>
+
+  <main class="card">
+    <header>
+      <h1>QR Code Generator</h1>
+      <p>Create QR codes instantly from any URL</p>
+    </header>
+
+    <div class="form">
+      <input
+        id="urlInput"
+        type="text"
+        placeholder="https://example.com"
+        autocomplete="off"
+      />
+
+      <button id="generateBtn">
+        Generate QR
+      </button>
+    </div>
+
+    <section class="output">
+      <div id="qrContainer" class="qr-box"></div>
+      <a id="downloadLink" class="download hidden" download="qr.png">
+        Download PNG
+      </a>
+    </section>
+
+    <footer>
+      <span>100% client-side · No tracking · No data stored</span>
+    </footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
