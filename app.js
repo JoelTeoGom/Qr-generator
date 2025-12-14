@@ -27,10 +27,33 @@ function clearQR() {
   downloadLink.removeAttribute("href");
 }
 
+function getFilenameFromUrl(url) {
+  try {
+    const urlObj = new URL(url);
+    // Get hostname without www
+    let domain = urlObj.hostname.replace(/^www\./, "");
+    // Remove .com, .net, .org, etc.
+    domain = domain.replace(/\.(com|net|org|io|dev|app|co)$/, "");
+    // Add path if exists (sanitize it)
+    if (urlObj.pathname && urlObj.pathname !== "/") {
+      const path = urlObj.pathname.replace(/^\/|\/$/g, "").replace(/\//g, "-");
+      if (path) domain += `-${path}`;
+    }
+    // Clean up: only allow alphanumeric, hyphens, underscores
+    domain = domain.replace(/[^a-zA-Z0-9-_]/g, "-");
+    return `qr-${domain}.png`;
+  } catch {
+    return "qr-code.png";
+  }
+}
+
 function setDownloadFromCanvas() {
   const canvas = qrContainer.querySelector("canvas");
   if (!canvas) return;
+  const url = normalizeUrl(urlInput.value);
+  const filename = getFilenameFromUrl(url);
   downloadLink.href = canvas.toDataURL("image/png");
+  downloadLink.download = filename;
   downloadLink.classList.remove("hidden");
 }
 
