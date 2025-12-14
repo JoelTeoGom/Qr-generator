@@ -6,15 +6,25 @@ const downloadLink = document.getElementById("downloadLink");
 function normalizeUrl(value) {
   const v = value.trim();
   if (!v) return "";
-  if (!/^https?:\/\//i.test(v)) return "https://" + v;
-  return v;
+  return /^https?:\/\//i.test(v) ? v : `https://${v}`;
+}
+
+function clearOutput() {
+  qrContainer.innerHTML = "";
+  downloadLink.classList.add("hidden");
+  downloadLink.removeAttribute("href");
+}
+
+function setDownloadFromCanvas() {
+  const canvas = qrContainer.querySelector("canvas");
+  if (!canvas) return;
+  downloadLink.href = canvas.toDataURL("image/png");
+  downloadLink.classList.remove("hidden");
 }
 
 function generateQR() {
   const url = normalizeUrl(urlInput.value);
-
-  qrContainer.innerHTML = "";
-  downloadLink.classList.add("hidden");
+  clearOutput();
 
   if (!url) return;
 
@@ -27,17 +37,13 @@ function generateQR() {
 
   new QRCode(qrContainer, {
     text: url,
-    width: 260,
-    height: 260,
+    width: 320,
+    height: 320,
     correctLevel: QRCode.CorrectLevel.M,
   });
 
-  setTimeout(() => {
-    const canvas = qrContainer.querySelector("canvas");
-    if (!canvas) return;
-    downloadLink.href = canvas.toDataURL("image/png");
-    downloadLink.classList.remove("hidden");
-  }, 50);
+  // Wait for canvas render
+  setTimeout(setDownloadFromCanvas, 50);
 }
 
 generateBtn.addEventListener("click", generateQR);
