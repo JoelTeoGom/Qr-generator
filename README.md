@@ -1,4 +1,3 @@
-````md
 # QR Code Generator
 
 A clean, modern, fully client-side QR code generator that turns any URL into a QR code you can download as a PNG.  
@@ -26,7 +25,7 @@ https://YOUR_USERNAME.github.io/qr-generator/
 1. Clone the repo:
    ```bash
    git clone https://github.com/YOUR_USERNAME/qr-generator.git
-````
+
 
 2. Open the project folder and launch `index.html` in your browser.
 
