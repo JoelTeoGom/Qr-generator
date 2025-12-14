@@ -1,7 +1,10 @@
+
 const urlInput = document.getElementById("urlInput");
 const generateBtn = document.getElementById("generateBtn");
 const qrContainer = document.getElementById("qrContainer");
 const downloadLink = document.getElementById("downloadLink");
+
+let observer = null;
 
 function normalizeUrl(value) {
   const v = value.trim();
@@ -9,8 +12,17 @@ function normalizeUrl(value) {
   return /^https?:\/\//i.test(v) ? v : `https://${v}`;
 }
 
-function clearOutput() {
-  qrContainer.innerHTML = "";
+function clearQR() {
+  // Stop any previous observer
+  if (observer) {
+    observer.disconnect();
+    observer = null;
+  }
+
+  // Remove previous QR elements (keep placeholder)
+  qrContainer.querySelectorAll("canvas, img").forEach((el) => el.remove());
+
+  qrContainer.classList.remove("has-qr");
   downloadLink.classList.add("hidden");
   downloadLink.removeAttribute("href");
 }
@@ -22,9 +34,24 @@ function setDownloadFromCanvas() {
   downloadLink.classList.remove("hidden");
 }
 
+function revealQR() {
+  const qrEl = qrContainer.querySelector("canvas, img");
+  if (!qrEl) return;
+
+  // Hide placeholder, show QR
+  qrContainer.classList.add("has-qr");
+  setDownloadFromCanvas();
+
+  // We can stop observing once we have the element
+  if (observer) {
+    observer.disconnect();
+    observer = null;
+  }
+}
+
 function generateQR() {
   const url = normalizeUrl(urlInput.value);
-  clearOutput();
+  clearQR();
 
   if (!url) return;
 
@@ -35,6 +62,11 @@ function generateQR() {
     return;
   }
 
+  // Observe changes: qrcodejs will append canvas/img asynchronously
+  observer = new MutationObserver(() => revealQR());
+  observer.observe(qrContainer, { childList: true, subtree: true });
+
+  // Generate (qrcodejs inserts canvas/img inside qrContainer)
   new QRCode(qrContainer, {
     text: url,
     width: 320,
@@ -42,8 +74,8 @@ function generateQR() {
     correctLevel: QRCode.CorrectLevel.M,
   });
 
-  // Wait for canvas render
-  setTimeout(setDownloadFromCanvas, 50);
+  // Fallback: in case observer misses for any reason
+  setTimeout(revealQR, 200);
 }
 
 generateBtn.addEventListener("click", generateQR);

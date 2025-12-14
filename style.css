@@ -105,6 +105,7 @@ button:hover {
 }
 
 .qr-box {
+  position: relative;
   background: white;
   padding: 18px;
   border-radius: 18px;
@@ -112,6 +113,41 @@ button:hover {
   min-width: 320px;
   display: grid;
   place-items: center;
+  overflow: hidden; /* para que la animación no “salga” */
+}
+
+/* Placeholder */
+.qr-placeholder {
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff, #f6f7fb);
+  border: 1px dashed rgba(2, 6, 23, 0.2);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 18px;
+  gap: 10px;
+}
+
+.qr-placeholder__icon svg {
+  fill: rgba(2, 6, 23, 0.55);
+}
+
+.qr-placeholder__text strong {
+  display: block;
+  color: rgba(2, 6, 23, 0.85);
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.qr-placeholder__text span {
+  display: block;
+  color: rgba(2, 6, 23, 0.55);
+  font-size: 13px;
+}
+
+/* Ocultar placeholder cuando hay QR */
+.qr-box.has-qr .qr-placeholder {
+  display: none;
 }
 
 .download {
@@ -142,13 +178,8 @@ footer {
     padding: 40px;
   }
 
-  h1 {
-    font-size: 36px;
-  }
-
-  header p {
-    font-size: 17px;
-  }
+  h1 { font-size: 36px; }
+  header p { font-size: 17px; }
 
   .qr-box {
     min-width: 360px;
@@ -163,3 +194,5 @@ footer {
     min-height: 260px;
   }
 }
+
+
